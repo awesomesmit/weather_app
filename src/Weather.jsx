@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import { Button } from "@material-ui/core";
 
 const Weather = () => {
   const [data, setData] = useState([]);
+  const [clickedCountry, setClicketCountry] = useState("");
   const location = useLocation();
   let events_data = location.state.data;
   const handleSelectCountry = async (country) => {
+    setClicketCountry(country);
     console.log("click thau.......");
     let response = await axios.get(
       `http://api.weatherstack.com/current?access_key=5b9621f35a6486b1f53e5954e3df897f&query=${country.capital[0]}`
@@ -17,20 +20,27 @@ const Weather = () => {
   return (
     <div>
       {events_data &&
-        events_data.map((country) => (
-          <div>
+        events_data.map((country, index) => (
+          <div className="country-data">
+            <p>Country: {country.name.official}</p>
             <p>Capital City: {country.capital}</p>
             <p>Population: {country.population}</p>
             <p>Latlang:{country.latlng}</p>
-            <img height="auto"
-            width="320px"
-            alt="country flag"
-            src={`${country.flags.svg}`} />
-            <br/>
+            <img
+              height="auto"
+              width="320px"
+              alt="country flag"
+              src={`${country.flags.svg}`}
+            />
+            <br />
 
-            <button onClick={() => handleSelectCountry(country)}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleSelectCountry(country, index)}
+            >
               Capital Weather
-            </button>
+            </Button>
             {console.log("data", data)}
             {/* {data === {} ? (
               <div>
@@ -41,7 +51,7 @@ const Weather = () => {
                 ) : (
                   console.log("reached here.............................")
                 )} */}
-            {data.length !== 0 ? (
+            { country === clickedCountry && data.length !== 0 ? (
               <div>
                 <p>temperature: {data.temperature} Celcius</p>
                 <img src={data.weather_icons} alt="Temp Icon" />

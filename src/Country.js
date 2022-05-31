@@ -1,10 +1,24 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {Button} from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& .MuiTextField-root': {
+      // margin: "50px",
+      width: 200,
+    },
+  },
+}));
 
 export default function Country(props) {
+
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [query, setQuery] = useState("");
+  const classes = useStyles();
 
   async function fetchData() {
     const response = await fetch(
@@ -33,12 +47,14 @@ export default function Country(props) {
     <div
       style={{
         margin: 20,
+        color:"black"
       }}
     >
-      <form onSubmit={handleSubmit}>
+      <form className={classes.root} onSubmit={handleSubmit}>
         <br />
-        <label>
-          <input
+        <label >
+          <TextField
+            id="outlined-basic" label="Required" variant="outlined" size="small"
             type="text"
             placeholder="Enter Country"
             value={query}
@@ -47,10 +63,10 @@ export default function Country(props) {
             }}
           />
         </label>
-
-        <button disabled={!query} type="submit">
+        <br /><br />
+        <Button  variant="contained" color="primary" disabled={!query} type="submit">
           Submit
-        </button>
+        </Button>
       </form>
     </div>
   );
